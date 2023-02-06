@@ -1,0 +1,203 @@
+* {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+body {
+	font-family: 'Khula', sans-serif;
+	font-weight: 300;
+	color: black;
+	line-height: 1em;
+	margin: 0;
+    padding: 2em 1em;
+    overflow: hidden;
+}
+
+
+.container{
+    display: flex;
+    padding: 1rem;
+}
+
+.col1{
+    flex: 25%;
+    text-align: center;
+}
+
+.col2{
+    flex: 45%;
+    justify-content: center;
+}
+
+.col3{
+    flex: 30%;
+    text-align: center;
+}
+
+.graphs{
+    text-align: center;
+}
+
+.chart{
+    width: 100%;
+    height: 360px;
+}
+
+.radio{
+    padding-top: 5rem;
+    padding-bottom: 2rem;
+}
+
+.canvas{
+    padding-bottom: 2rem;
+}
+
+canvas{
+    background-color: #e1eafd;
+}
+
+label{
+    cursor: pointer;
+}
+
+button {
+    top:50%;
+    background: #084cdf;
+    color: #fff;
+    border:none; 
+    border-radius:10px; 
+    padding: 10px 20px;
+    min-height:20px; 
+    min-width: 120px;
+    cursor: pointer;
+    font-size: medium;
+}
+
+button:hover{
+    background: #0d45a5;
+}
+
+button[type=submit] {
+    top:50%;
+    background: #084cdf;
+    color: #fff;
+    border:none; 
+    border-radius:10px; 
+    padding: 5px 10px;
+    min-height:10px; 
+    min-width: 80px;
+    cursor: pointer;
+    font-size: medium;
+}
+
+button[type=submit]:hover{
+    background: #0d45a5;
+}
+
+.modal {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    overflow: hidden;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+}
+
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+  
+.tabs {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+  
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 2px solid #ddd;
+    display: inline-block;
+}
+  
+.tab.active {
+    border-bottom: 2px solid black;
+}
+  
+.tab-content {
+    display: none;
+    padding: 20px;
+    background-color: white;
+    text-align: center;
+}
+  
+.tab-content.active {
+    display: block;
+}
+
+
+.filter-graph{
+    display: flex;
+    text-align: center;
+}
+
+.filter{
+    flex: 50%;
+    text-align: center;
+}
+
+.phase{
+    flex: 50%;
+    text-align: center;
+}
+
+.chart1{
+    width: 100%;
+    height: 350px;
+}
+
+.form-cont{
+    text-align: center;
+    padding-bottom: 1rem;
+}
+
+.form-cont * {
+    padding: 5px 10px;
+}
+
+input[type=number]{
+    padding: 5px 10px;
+}
+
+.submit-btn{
+    text-align: center;
+}
+
+.chart2{
+    width: 100%;
+    height: 330px;
+}
