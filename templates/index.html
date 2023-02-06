@@ -14,6 +14,12 @@
 
   <div class="container">
     <div class="col1">
+      <div class="Import">
+        <form id="formImport" enctype="multipart/form-data">
+          <input type="file" name="file" id="file" onchange="importFilter()" > 
+          <label for="file" class="label">Import</label>
+        </form>
+      </div>
       <div class="radio">
         <input type="radio" id="zero" name="pole-zero-select" value="zero" checked>
         <label for="zero">Zero</label>
@@ -25,16 +31,10 @@
       </div>
       <div class="button">
         <button onclick="deleteShape();">Delete</button>
-        <button onclick="unselect();">Unselect</button>
       </div>
-      <br><br>
-      <div class="button">
+      <div class="Export">
         <form id="formExport">
           <button type="submit" > Export </button>
-        </form>
-        <br>
-        <form id="formImport" enctype="multipart/form-data">
-          <input type="file" name="file" onchange="importFilter()" > Import </button>
         </form>
       </div>
     </div>
@@ -55,8 +55,8 @@
       <div class="modal-content">
         <span class="close">&times;</span>
         <ul class="tabs">
-        <li class="tab active" data-tab="tab-1">Tab 1</li>
-        <li class="tab" data-tab="tab-2">Tab 2</li>
+        <li class="tab active" data-tab="tab-1">Custum Filter</li>
+        <li class="tab" data-tab="tab-2">Ready Filters</li>
         </ul>
         <div id="tab-1" class="tab-content active">
           <form id = "allPassCoeff">

@@ -42,6 +42,7 @@ canvas.addEventListener("click", function(event) {
   var y = event.clientY - canvas.offsetTop;
   var zero = document.getElementById("zero");
   var pole = document.getElementById("pole");
+  console.log(x, y);
 
   if (pole.checked) {
     var pselected = false;
@@ -49,7 +50,11 @@ canvas.addEventListener("click", function(event) {
       var pole = poles[i];
       var distance = Math.sqrt(Math.pow(x - pole.x, 2) + Math.pow(y - pole.y, 2));
       if (distance <= 5) {
-        selectedPole = pole;
+        if (selectedPole === pole){
+          selectedPole = null;
+        }else{
+          selectedPole = pole;
+        }
         pselected = true;
         redraw();
         break;
@@ -71,7 +76,11 @@ canvas.addEventListener("click", function(event) {
             var zero = zeros[i];
             var distance = Math.sqrt(Math.pow(x - zero.x, 2) + Math.pow(y - zero.y, 2));
             if (distance <= 5) {
-              selectedZero = zero;
+              if (selectedZero === zero){
+                selectedZero = null;
+              }else{
+                selectedZero = zero;
+              }
               zselected = true;
               redraw();
               break;
@@ -81,7 +90,6 @@ canvas.addEventListener("click", function(event) {
             var newZero = {x: x, y: y};
             zeros.push(newZero);
             drawZero(x, y);
-
             send(poles, zeros);
             getData();
             draw();
@@ -273,14 +281,20 @@ function importFilter(){
       for (var i = 0; i < data.zerosArray.length; i++) {
         const x = (data.zerosArray[i][0])*120 + 150  ;
         const y = 150- (data.zerosArray[i][1])*120 ;
-        drawZero(x ,y , 5, 0, 2 * Math.PI);
+        // drawZero(x ,y , 5, 0, 2 * Math.PI);
+        var newZero = {x: x, y: y};
+        zeros.push(newZero);
+        drawZero(x, y);
     }
   }
   if(data.polesArray.length> 0){
     for (var i = 0; i < data.zerosArray.length; i++) {
       const x = data.polesArray[i][0]*120 +150 ;
       const y = 150-(data.polesArray[i][1])*120;
-      drawPole(x, y, 5, 0, 2 * Math.PI);
+      // drawPole(x, y, 5, 0, 2 * Math.PI);
+      var newPole = {x: x, y: y};
+      poles.push(newPole);
+      drawPole(x, y);
   }
 
   }
