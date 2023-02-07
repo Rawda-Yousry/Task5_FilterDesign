@@ -42,7 +42,7 @@ canvas.addEventListener("click", function(event) {
   var y = event.clientY - canvas.offsetTop;
   var zero = document.getElementById("zero");
   var pole = document.getElementById("pole");
-  console.log(x, y);
+  // console.log(x, y);
 
   if (pole.checked) {
     var pselected = false;
@@ -152,6 +152,7 @@ function drawZero(x, y) {
     context.beginPath();
     context.arc(x, y, 5, 0, 2 * Math.PI);
     context.fill();
+    console.log(x,y)
 }
 
 function drawPole(x, y) {
@@ -163,6 +164,7 @@ function drawPole(x, y) {
     context.moveTo(x + 5, y - 5);
     context.lineTo(x - 5, y + 5);
     context.stroke();
+    console.log(x,y)
 }
 
 function redraw() {
@@ -247,9 +249,9 @@ function getData(){
       type: 'POST',
       url: '/filter_send',
       success: function(array) {
-        console.log('angles',array.angles);
-        console.log('w', array.magnitudeX);
-        console.log('mag', array.magnitudeY);
+        // console.log('angles',array.angles);
+        // console.log('w', array.magnitudeX);
+        // console.log('mag', array.magnitudeY);
         const data = {
           magnitudeX: array.magnitudeX,
           magnitudeY: array.magnitudeY,
@@ -345,7 +347,7 @@ async function draw(){
     };
    
     Plotly.newPlot(graphDiv1, graphData1, layout);
-    console.log("datataa",graphData1)
+    // console.log("datataa",graphData1)
   } catch (error) {
     console.error(error);
   }
@@ -372,7 +374,7 @@ async function draw(){
     };
    
     Plotly.newPlot(graphDiv2, graphData2, layout);
-    console.log("datataa",graphData1)
+    // console.log("datataa",graphData1)
   } catch (error) {
     console.error(error);
   }
@@ -582,3 +584,55 @@ function liveDraw(){
 }
 
 liveDraw();
+
+// var no;
+
+function readyFilter(no){
+  poles = []
+  zeros = []
+
+  if (no == 1) {
+    // 150.30_Z_Notch
+    newZero = {x: 150, y: 30};
+    zeros.push(newZero);
+    drawZero(150,30) 
+    console.log("Notch")
+  }
+  else if (no == 2){
+    // 270.150-Z_HPF
+    newZero = {x: 271, y: 150};
+    zeros.push(newZero);
+    drawZero(270,150) 
+    console.log("HPF")
+  }
+  else if (no == 3){
+    // 30.150_270.150_Z_BPF
+    newZero = {x: 30, y: 150};
+    zeros.push(newZero);
+    newZero = {x: 271, y: 150};
+    // newZero = {
+    //   x:[30,271],
+    //   y:[150,150]
+    // }
+
+    zeros.push(newZero);
+    drawZero(150,30) 
+    drawZero(270,150)
+
+    console.log("BPF")
+  }
+  else if(no == 4){
+    // 30.150__LPF
+    newZero = {x: 30, y: 150};
+    zeros.push(newZero);
+    drawZero(30,150) 
+
+    console.log("LPF")
+  }
+
+  
+  redraw()
+}
+
+
+

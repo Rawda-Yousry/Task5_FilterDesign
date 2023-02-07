@@ -42,8 +42,8 @@ def complexNumbers(array):
 
 
 def filter():
-    print("zerosfilter",zerosArray)
-    print("polesfilter",polesArray)
+    # print("zerosfilter",zerosArray)
+    # print("polesfilter",polesArray)
     zeroes = complexNumbers(zerosArray)
     poles = complexNumbers(polesArray)
 
@@ -175,7 +175,7 @@ def importFilter():
                     zerosArray.append([columns[0],columns[1]])
                 elif string[0] == 'p':
                     polesArray.append([columns[0],columns[1]])
-                print(columns[2])
+                # print(columns[2])
         filter_send()
         data = {
                 "zerosArray": zerosArray,
