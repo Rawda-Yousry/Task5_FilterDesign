@@ -521,7 +521,17 @@ function sendCoeff(){
   })
 }
 
+$(".left-arrow").click(function() {
+  $(".scroll-area").animate({
+    scrollLeft: "-=650px"
+  }, "fast");
+});
 
+$(".right-arrow").click(function() {
+  $(".scroll-area").animate({
+    scrollLeft: "+=900px"
+  }, "fast");
+});
 
 
 // Live signal
