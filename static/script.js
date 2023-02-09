@@ -1,5 +1,6 @@
 var canvas = document.getElementById("z-plane");
 var context = canvas.getContext("2d");
+var canvasGenerate = document.getElementById("live-signal")
 var poles = [];
 var zeros = [];
 var magnitudeX = [];
@@ -533,116 +534,81 @@ $(".right-arrow").click(function() {
   }, "fast");
 });
 
-
 // Live signal
+var xInput = [];
+var yInput = [];
+let y_filtterd =[]
+var filtter_data = [
+  {
+    x: xInput,
+    y: y_filtterd,
+    mode: 'lines',
+    line: { color: '#fd413c' },
+},
 
-function liveDraw(){
-  var xyValues = [
-    {x:50, y:7},
-    {x:60, y:8},
-    {x:70, y:8},
-    {x:80, y:9},
-    {x:90, y:9},
-    {x:100, y:9},
-    {x:110, y:10},
-    {x:120, y:11},
-    {x:130, y:14},
-    {x:140, y:14},
-    {x:150, y:15}
-  ];
-  var graphDiv5 = document.getElementById('graphDiv5');
-  var graphData5 = [{
-    x: [1, 2, 3, 4],
-    y: [10, 15, 13, 17],
-    type: 'scatter'
-  }];
-
-  var layout = {
-    title: 'Input',
-    xaxis: {
-      // title: 'Year',
-      // zeroline: false
-    },
-    yaxis: {
-      // title: 'Percent',
-      // showline: false
-    }
-  };
- 
-  Plotly.newPlot(graphDiv5, graphData5, layout);
-
-  var graphDiv6 = document.getElementById('graphDiv6');
-  var graphData6 = [{
-    x: [1, 2, 3, 4],
-    y: [10, 15, 13, 17],
-    type: 'scatter'
-  }];
-
-  var layout = {
-    title: 'Output',
-    xaxis: {
-      // title: 'Year',
-      // zeroline: false
-    },
-    yaxis: {
-      // title: 'Percent',
-      // showline: false
-    }
-  };
- 
-  Plotly.newPlot(graphDiv6, graphData6, layout);
-}
-
-liveDraw();
-
+]
 // var no;
+var offset = canvas.width;
+var plotData = [{
+    x: xInput,
+    y: yInput,
+    type: "scatter",
+    mode: "lines"
+}];
+var layout = {
+    title: "Mouse position vs. Time",
+    xaxis: {title: "Time (s)",
+    dtick: 10
+            },
+    yaxis: {title: "X Position"},
+};
+Plotly.newPlot(graphDiv5, plotData, layout);
+Plotly.newPlot(graphDiv6, filtter_data, layout)
+// realTimePlotting(y_filtterd, dx, a, b)
 
-function readyFilter(no){
-  poles = []
-  zeros = []
+function sendInput(yInput){
+  return new Promise(function(resolve, reject) {
+  $.ajax({
+    type: "POST",
+    url: `${window.origin}/differenceEquationCoefficients`,
+    data: JSON.stringify(yInput),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success: function(data){
+      console.log(data);  // Logs the processed data to the console
+      resolve(data);
+    }
+    
+})
 
-  if (no == 1) {
-    // 150.30_Z_Notch
-    newZero = {x: 150, y: 30};
-    zeros.push(newZero);
-    drawZero(150,30) 
-    console.log("Notch")
-  }
-  else if (no == 2){
-    // 270.150-Z_HPF
-    newZero = {x: 271, y: 150};
-    zeros.push(newZero);
-    drawZero(270,150) 
-    console.log("HPF")
-  }
-  else if (no == 3){
-    // 30.150_270.150_Z_BPF
-    newZero = {x: 30, y: 150};
-    zeros.push(newZero);
-    newZero = {x: 271, y: 150};
-    // newZero = {
-    //   x:[30,271],
-    //   y:[150,150]
-    // }
+  })
 
-    zeros.push(newZero);
-    drawZero(150,30) 
-    drawZero(270,150)
 
-    console.log("BPF")
-  }
-  else if(no == 4){
-    // 30.150__LPF
-    newZero = {x: 30, y: 150};
-    zeros.push(newZero);
-    drawZero(30,150) 
-
-    console.log("LPF")
-  }
-
-  
-  redraw()
 }
 
+
+
+// Track mouse position and update plot
+
+var startTime = Date.now();
+var updateFilteredSignal;
+canvasGenerate.addEventListener("mousemove",async function(event) {
+
+  // const [a, b] = await get_differenceEquationCoefficients(zeros, poles)
+  var elapsedTime = (Date.now() - startTime)/1000;
+
+  if (xInput.length >= 100) {
+    xInput.splice(0, 10);
+    yInput.splice(0, 10);
+    y_filtterd.splice(0,10);
+  }
+  xInput.push(elapsedTime);
+  yInput.push(event.clientX);
+  
+  y_filtterd = await sendInput(yInput)
+
+  Plotly.update("graphDiv5", {x: [xInput], y: [yInput]});
+  Plotly.update("graphDiv6", {x: [xInput], y: [y_filtterd]});
+});
 
 

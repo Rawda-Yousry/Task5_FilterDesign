@@ -8,6 +8,7 @@ from plotly.subplots import make_subplots
 import numpy as np
 from scipy import signal
 import csv
+import scipy
 
 app = Flask(__name__)
 
@@ -19,7 +20,7 @@ zerosArray = []
 w = []
 magnitude = []
 angles = []
-
+filteredSignal = []
 allPassCoeff = [0,0]
 angles_allPass = np.zeros(512)
 w_allPass = []
@@ -43,12 +44,12 @@ def complexNumbers(array):
 
 def filter():
     # print("zerosfilter",zerosArray)
-    # print("polesfilter",polesArray)
-    zeroes = complexNumbers(zerosArray)
+    global zeros,poles
+    zeros = complexNumbers(zerosArray)
     poles = complexNumbers(polesArray)
 
     global w
-    w, h = signal.freqz_zpk(zeroes, poles, k=1, fs =2* np.pi)
+    w, h = signal.freqz_zpk(zeros, poles, k=1, fs =2* np.pi)
 
     global magnitude
     magnitude = 20 * np.log10(np.abs(h))
@@ -195,6 +196,16 @@ def initiate():
     angles_allPass = np.zeros(512)
     angles =[]
     return " "
+
+
+@app.route('/differenceEquationCoefficients' , methods=['GET','POST'])
+def applying_filter():
+        # transfet function coefficients
+    global filteredSignal
+    b,a = scipy.signal.zpk2tf(zeros, poles, 1) 
+    inputSignal = request.get_json()
+    filteredSignal = scipy.signal.lfilter(b,a,inputSignal)
+    return jsonify(filteredSignal.real.tolist())
 
 
 if __name__ == '__main__':
