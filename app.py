@@ -183,7 +183,6 @@ def importFilter():
                 "zerosArray": zerosArray,
                 "polesArray": polesArray
         }
-            
     return jsonify(data)
     
 @app.route("/initiate",methods=["post"])

@@ -582,21 +582,12 @@ function sendInput(yInput){
 })
 
   })
-
-
 }
 
 
-
-// Track mouse position and update plot
-
-var startTime = Date.now();
-var updateFilteredSignal;
+var elapsedTime = 0;
 canvasGenerate.addEventListener("mousemove",async function(event) {
-
-  // const [a, b] = await get_differenceEquationCoefficients(zeros, poles)
-  var elapsedTime = (Date.now() - startTime)/1000;
-
+  updateGraph()
   if (xInput.length >= 100) {
     xInput.splice(0, 10);
     yInput.splice(0, 10);
@@ -606,9 +597,14 @@ canvasGenerate.addEventListener("mousemove",async function(event) {
   yInput.push(event.clientX);
   
   y_filtterd = await sendInput(yInput)
+  
+});
 
+function updateGraph(){
+  elapsedTime ++
   Plotly.update("graphDiv5", {x: [xInput], y: [yInput]});
   Plotly.update("graphDiv6", {x: [xInput], y: [y_filtterd]});
-});
+  
+}
 
 
