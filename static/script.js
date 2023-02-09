@@ -593,10 +593,11 @@ function sendInput(yInput){
   })
 }
 
-
+var s = 0
 var elapsedTime = 0;
 canvasGenerate.addEventListener("mousemove",async function(event) {
   updateGraph()
+  s = 1 
   if (xInput.length >= 100) {
     xInput.splice(0, 10);
     yInput.splice(0, 10);
@@ -657,6 +658,7 @@ function clearGraph(){
 
 
 function importGraph(x_point,y_point,y_new_point,length){
+  s = 0
     var arrayLength = 100
     var yArray = []
     var yNewArray =[]
@@ -696,6 +698,10 @@ function importGraph(x_point,y_point,y_new_point,length){
 var counter = 1;
 
 var interval = setInterval(function() {
+  if (s === 1) {
+    clearInterval(interval);
+    return;
+  }
   var y = y_point[100+counter]
   yArray = yArray.concat(y)
   yArray.splice(0, 1)
@@ -720,6 +726,17 @@ var interval = setInterval(function() {
     
 
 }
+
+function clearGraph(){
+  xInput = []
+  yInput = []
+  y_filtterd =[]
+  s = 1
+  Plotly.update("graphDiv5", {x: [xInput], y: [yInput]});
+  Plotly.update("graphDiv6", {x: [xInput], y: [y_filtterd]});
+  // clearInterval(interval)
+}
+
 
 
 
