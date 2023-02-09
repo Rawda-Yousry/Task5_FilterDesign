@@ -257,7 +257,7 @@ function getData(){
           magnitudeX: array.magnitudeX,
           magnitudeY: array.magnitudeY,
           angles: array.angles,
-          angles_allPass: array.angles_allPass
+          angles_allPass: array.angles_allPass,
         };
         sessionStorage.setItem('data', JSON.stringify(data));
         resolve(data);
@@ -383,6 +383,7 @@ async function draw(){
 
   try {
     const data = await getData();
+    console.log(data.angles);
     var graphDiv3 = document.getElementById('graphDiv3');
     var graphData3 = [{
       x: data.magnitudeX,
@@ -432,6 +433,33 @@ async function draw(){
   } catch (error) {
     console.error(error);
   }
+
+  try {
+    const data = await getData();
+    var graphDiv7 = document.getElementById('graphDiv7');
+    var graphData7 = [{
+      x: data.magnitudeX,
+      y: data.angles,
+      type: 'scatter'
+    }];
+
+    var layout = {
+      title: 'Phase Response',
+      xaxis: {
+        // title: 'Year',
+        // zeroline: false
+      },
+      yaxis: {
+        // title: 'Percent',
+        // showline: false
+      }
+    };
+   
+    Plotly.newPlot(graphDiv7, graphData7, layout);
+  } catch (error) {
+    console.error(error);
+  }
+
 }
 
 // Phase Correction Button
@@ -507,16 +535,68 @@ form.addEventListener("submit", function(event) {
     x: x_value,
     y: y_value,
     flag: false,
+    delete: false,
   };
   sendCoeff()
   draw()
 });
 
+var deletedCoeff;
+var deletedCoeffarr = [];
+var cont = 0;
 function applyFilter(){
-  coeff.flag = true
-  console.log(coeff.flag)
-  sendCoeff()
-  draw()
+  coeff.flag = true;
+  console.log(coeff.flag);
+  sendCoeff();
+  draw();
+
+  var note = document.getElementById('note');
+  note.style.display = 'none';
+  cont += 1;
+  deletedCoeff = {
+    x: coeff.x,
+    y: coeff.y,
+    flag: false,
+    delete: true,
+  };
+  deletedCoeffarr.push(deletedCoeff);
+  var table = document.getElementById("table");
+  var row = table.insertRow(-1);
+  row.setAttribute("id", cont);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  cell1.innerHTML = `${coeff.x} +${coeff.y}j`;
+  cell2.innerHTML = `<button class="table-btn" id="btn${cont}" onclick="deleteA(${cont})">Delete</button>`;
+}
+
+function deleteA(rowid){
+  for (var i = 1; i <= deletedCoeffarr.length; i++){
+    if(i == rowid){
+      delCoeff = deletedCoeffarr[i - 1];
+      console.log(delCoeff);
+      break;
+    }
+  }
+  fetch(`${window.origin}/deletedAllpassCoeff`, {
+    method: "POST",
+    credentials: "include",
+    body: JSON.stringify(delCoeff),
+    cache: "no-cache",
+    headers: new Headers({
+      "content-type": "application/json"
+    })
+  })
+  draw();
+  deleteRow(rowid);
+}
+
+function deleteRow(rowid) {   
+  var row = document.getElementById(rowid);
+  row.parentNode.removeChild(row);
+  if(rowid == 1){
+    var note = document.getElementById('note');
+    note.style.display = 'block';
+  }
 }
 
 function sendCoeff(){
@@ -531,15 +611,16 @@ function sendCoeff(){
   })
 }
 
+
 $(".left-arrow").click(function() {
-  $(".scroll-area").animate({
-    scrollLeft: "-=650px"
+  $(".menu").animate({
+    scrollLeft: "-=1400px"
   }, "fast");
 });
 
 $(".right-arrow").click(function() {
-  $(".scroll-area").animate({
-    scrollLeft: "+=900px"
+  $(".menu").animate({
+    scrollLeft: "+=1400px"
   }, "fast");
 });
 
@@ -802,6 +883,7 @@ function readyFilter(no){
   coeff = {
     x: x,
     y: y,
+    flag: true,
   };
   sendCoeff()
   redraw()

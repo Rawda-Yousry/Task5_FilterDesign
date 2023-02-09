@@ -29,12 +29,12 @@
       <div class="canvas">
         <canvas id="z-plane" width="300" height="300"></canvas><br>
       </div>
-      <div class="button">
-        <button onclick="deleteShape();">Delete</button>
+      <div>
+        <button class="button" onclick="deleteShape();">Delete</button>
       </div>
       <div class="Export">
         <form id="formExport">
-          <button type="submit" > Export </button>
+          <button class="button" type="submit" > Export </button>
         </form>
       </div>
     </div>
@@ -42,7 +42,7 @@
       <div class="graphs">
         <div id = "graphDiv1" class="chart"></div>
         <div id = "graphDiv2" class="chart"></div>
-        <button id="myBtn">Phase Correction</button>
+        <button class="button" id="myBtn">Phase Correction</button>
       </div>
     </div>
     <div class="col3">
@@ -56,7 +56,7 @@
       <div class="live-graphs">
         <div id = "graphDiv5" class="chart2"></div>
         <div id = "graphDiv6" class="chart2"></div>
-        <button  id ="clear">Delete Signal</button>
+        <button class="button" id ="clear">Delete Signal</button>
       </div>
     </div>
 
@@ -68,24 +68,34 @@
         <li class="tab" data-tab="tab-2">Ready Filters</li>
         </ul>
         <div id="tab-1" class="tab-content active">
-          <form id = "allPassCoeff">
-            <p>'a' value</p>
-            <div class="form-cont">
-              <div>
-                <label for="x_value">x</label>
-                <input type="number" id="x_value" name="x_value" step = 0.1>
-              </div>
-              <div>
-                <label for="y_value">y</label>
-                <input type="number" id="y_value" name="y_value" step = 0.1>
-              </div>
-              <div class="submit-btn">
-                <button type="submit">Show</button>
+          <div class="container">
+            <div class="col1">
+              <form id = "allPassCoeff">
+                <p>'a' value</p>
+                <div class="form-cont">
+                  <div>
+                    <label for="x_value">x</label>
+                    <input type="number" id="x_value" name="x_value" step = 0.1>
+                  </div>
+                  <div>
+                    <label for="y_value">y</label>
+                    <input type="number" id="y_value" name="y_value" step = 0.1>
+                  </div>
+                  <button class="button" type="submit">Show</button>
+                </div>
+              </form>
+              <button class="button" onclick="applyFilter()">Apply</button>
+            </div>
+            <div class="col2">
+              <div class="filter-table">
+                <p>Filters</p>
+                <table id="table">
+                  <tr>
+                    <td><p id="note">No filter added.</p></td>
+                  </tr>
+                </table>
               </div>
             </div>
-          </form>
-          <div class="submit-btn">
-            <button type="submit" onclick="applyFilter()">Apply</button>
           </div>
           <div class="filter-graph">
             <div class="filter">
@@ -97,46 +107,31 @@
           </div>
         </div>
         <div id="tab-2" class="tab-content" style="overflow-x: hidden;">
-          <div class="scroll-area">
-            <figure>
-              <img src="static\Catalog\-0.3.png" onclick="readyFilter(1);">  
-            </figure>
-
-            <figure>
-              <img src="static\Catalog\-0.7.png" onclick="readyFilter(2);">
-            </figure>
-
-            <figure>
-              <img src="static\Catalog\0.5.png" onclick="readyFilter(3);">
-              </figure>
-
-            <figure>
-              <img src="static\Catalog\0.9.png" onclick="readyFilter(4);">
-            </figure>
-
-            <figure>
-              <img src="static\Catalog\1j.png" onclick="readyFilter(5);">
-            </figure>
-
-            <figure>
-              <img src="static\Catalog\2i.png" onclick="readyFilter(6);">
-            </figure>
-
-            <figure>
-              <img src="static\Catalog\0.5+0.5j.png" onclick="readyFilter(7);">
-            </figure>
-
-            <figure>
-              <img src="static\Catalog\1+1j.png" onclick="readyFilter(8);">
-            </figure>
-
-          </div>
-
-          <div class="scroll-arrow left-arrow">
-            <i class="fa fa-arrow-left"></i>
-          </div>
-          <div class="scroll-arrow right-arrow">
-            <i class="fa fa-arrow-right"></i>
+          <div class="cont">
+            <div class="container">
+              <div class="col1">
+                <div id = "graphDiv7" class="chart3"></div>
+              </div>
+              <div class="col2"></div>
+            </div>
+            <div class="menu-wrapper">
+              <ul class="menu">
+                <li class="item"><img id="img" src="static\Catalog\-0.3.png" onclick="readyFilter(1);"></li>
+                <li class="item"><img src="static\Catalog\-0.7.png" onclick="readyFilter(2);"></li>
+                <li class="item"><img src="static\Catalog\0.5.png" onclick="readyFilter(3);"></li>
+                <li class="item"><img src="static\Catalog\0.9.png" onclick="readyFilter(4);"></li>
+                <li class="item"><img src="static\Catalog\1j.png" onclick="readyFilter(5);"></li>
+                <li class="item"><img src="static\Catalog\2i.png" onclick="readyFilter(6);"></li>
+                <li class="item"><img src="static\Catalog\0.5+0.5j.png" onclick="readyFilter(7);"></li>
+                <li class="item"><img src="static\Catalog\1+1j.png" onclick="readyFilter(8);"></li>
+              </ul>
+            
+              <div class="paddles">
+                <i class="fa fa-arrow-left scroll-arrow left-arrow"></i>
+                <i class="fa fa-arrow-right scroll-arrow right-arrow"></i>
+              </div>
+            
+            </div>
           </div>
         </div>
       </div>

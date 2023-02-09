@@ -23,11 +23,16 @@ magnitude = []
 angles = []
 filteredSignal = []
 allPassCoeff = [0,0]
+deletedAllpassCoeff = [0,0]
 angles_allPass = np.zeros(512)
 anglesallPass = np.zeros(512)
+deleted_angles_allPass = np.zeros(512)
+deleted_anglesallPass = np.zeros(512)
 w_allPass = []
+deleted_w_allPass = []
 
 applyAllPassFlag = False
+deleteFlag = False
     
 def normalization(arr):
     for i in arr:
@@ -60,21 +65,36 @@ def filter():
     angles = np.unwrap(np.angle(h))
     return " "
 
-
-def allPassFilter():
+def get_a(coeff):
     x = np.zeros(512)
     y = np.zeros(512)
 
-    x = allPassCoeff[0]
-    y = allPassCoeff[1]
+    x = coeff[0]
+    y = coeff[1]
 
     a =  x + y*1j
+    return a
+
+def allPassFilter():
+    a = get_a(allPassCoeff)
 
     global w_allPass, anglesallPass, angles_allPass
     w_allPass, h_allPass = signal.freqz([-a,1], [1, -a])
     anglesallPass = np.unwrap(np.angle(h_allPass))
     if applyAllPassFlag == True:
         angles_allPass +=  anglesallPass
+
+    filter_send()
+    return ""
+
+def deleteAllpassFilter():
+    a = get_a(deletedAllpassCoeff)
+
+    global deleted_w_allPass, deleted_anglesallPass, angles_allPass
+    deleted_w_allPass, h_allPass = signal.freqz([-a,1], [1, -a])
+    deleted_anglesallPass = np.unwrap(np.angle(h_allPass))
+    if deleteFlag == True:
+        angles_allPass -= deleted_anglesallPass
 
     filter_send()
     return ""
@@ -92,6 +112,9 @@ def filter_send():
     if applyAllPassFlag == True:
         global angles
         angles = angles + angles_allPass
+
+    if deleteFlag == True:
+        angles = angles - angles_allPass
 
     if type(w) is not list:
         w = w.tolist()
@@ -143,12 +166,26 @@ def getZeros():
 
 @app.route("/allPassCoeff", methods = ["POST"])
 def allPassCoeff():
-    global allPassCoeff,applyAllPassFlag
+    global allPassCoeff,applyAllPassFlag, deleteFlag
     data = request.get_json() 
     allPassCoeff = [float(data['x']), float(data['y'])] 
     applyAllPassFlag = data['flag']
+    deleteFlag = data['delete']
      
     allPassFilter()
+    # filter_send()
+    return '  '
+
+@app.route("/deletedAllpassCoeff", methods = ["POST"])
+def deletedAllpassCoeff():
+    global deletedAllpassCoeff, deleteFlag, applyAllPassFlag
+    data = request.get_json() 
+    deletedAllpassCoeff = [float(data['x']), float(data['y'])] 
+    deleteFlag = data['delete']
+    applyAllPassFlag = data['flag']
+     
+    deleteAllpassFilter()
+    print(deletedAllpassCoeff)
     # filter_send()
     return '  '
 
