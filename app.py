@@ -68,7 +68,8 @@ def allPassFilter():
 
     global w_allPass, angles_allPass
     w_allPass, h_allPass = signal.freqz([-a,1], [1, -a])
-    angles_allPass = np.unwrap(np.angle(h_allPass))
+    anglesallPass = np.unwrap(np.angle(h_allPass))
+    angles_allPass +=  anglesallPass
 
     filter_send()
     return ""
@@ -186,11 +187,13 @@ def importFilter():
     
 @app.route("/initiate",methods=["post"])
 def initiate():
-    global zeros,zerosArray,poles,polesArray
+    global zeros,zerosArray,poles,polesArray, w, angles, angles_allPass
     zerosArray = []
     poles=[]
     zeros=[]
     polesArray=[]
+    angles_allPass = np.zeros(512)
+    angles =[]
     return " "
 
 
