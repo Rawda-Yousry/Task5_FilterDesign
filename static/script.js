@@ -565,14 +565,21 @@ var plotData = [{
     mode: "lines"
 }];
 var layout = {
-    title: "Mouse position vs. Time",
+    title: "Input Signal",
     xaxis: {title: "Time (s)",
     dtick: 10
             },
     yaxis: {title: "X Position"},
 };
+var layout2 = {
+  title: "Output Signal",
+  xaxis: {title: "Time (s)",
+  dtick: 10
+          },
+  yaxis: {title: "X Position"},
+};
 Plotly.newPlot(graphDiv5, plotData, layout);
-Plotly.newPlot(graphDiv6, filtter_data, layout)
+Plotly.newPlot(graphDiv6, filtter_data, layout2)
 // realTimePlotting(y_filtterd, dx, a, b)
 
 function sendInput(yInput){
@@ -679,7 +686,7 @@ function importGraph(x_point,y_point,y_new_point,length){
     mode: "lines"
   }];
   layout = {
-    title: "Signal",
+    title: "Input Signal",
     xaxis: {title: "Time (s)",
     dtick: 10
             },
@@ -687,13 +694,21 @@ function importGraph(x_point,y_point,y_new_point,length){
   };
   Plotly.newPlot(graphDiv5, plotData, layout);
 
+  layout2 = {
+    title: "Output Signal",
+    xaxis: {title: "Time (s)",
+    dtick: 10
+            },
+    yaxis: {title: "Y (A)"},
+  };
+
   Plotly.newPlot(graphDiv6, [{
       x:xArray,
       y: yNewArray,
       type: 'scatter',
       mode: "lines",
       line: { color: '#fd413c' },
-    }],layout);
+    }],layout2);
 
 var counter = 1;
 
