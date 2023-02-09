@@ -23,12 +23,12 @@ body {
 }
 
 .col2{
-    flex: 45%;
+    flex: 40%;
     justify-content: center;
 }
 
 .col3{
-    flex: 30%;
+    flex: 35%;
     text-align: center;
 }
 
