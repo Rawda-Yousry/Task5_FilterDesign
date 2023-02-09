@@ -16,7 +16,7 @@
     <div class="col1">
       <div class="Import">
         <form id="formImport" enctype="multipart/form-data">
-          <input type="file" name="file" id="file" onchange="importFilter()" > 
+          <input type="file" name="file" id="file" > 
           <label for="file" class="label">Import</label>
         </form>
       </div>
@@ -32,12 +32,19 @@
       <div class="button">
         <button onclick="deleteShape();">Delete</button>
       </div>
+      <div class="button">
+        <button  id ="clear">Delete Graph</button>
+      </div>
       <div class="Export">
         <form id="formExport">
           <button type="submit" > Export </button>
         </form>
       </div>
     </div>
+    <form id="formSignal" enctype="multipart/form-data" method="post">
+      <input type="file" name="fileSignal" id="fileSignal"> 
+      <label for="file1" >Import Signal</label>
+    </form>
     <div class="col2">
       <div class="graphs">
         <div id = "graphDiv1" class="chart"></div>
@@ -46,6 +53,7 @@
       </div>
     </div>
     <div class="col3">
+
       <canvas id="live-signal" width="400" height="200"></canvas>
       <div id = "graphDiv5" class="chart2"></div>
       <div id = "graphDiv6" class="chart2"></div>

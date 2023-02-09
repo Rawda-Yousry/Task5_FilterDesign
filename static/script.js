@@ -269,7 +269,8 @@ function getData(){
   });
 }
 
-
+document.getElementById('fileSignal').addEventListener('change', importSignal);
+document.getElementById('file').addEventListener('change', importFilter);
 function importFilter(){
   var formData = new FormData($('#formImport')[0])
   $.ajax({
@@ -614,6 +615,124 @@ function updateGraph(){
   Plotly.update("graphDiv6", {x: [xInput], y: [y_filtterd]});
   
 }
+
+function importSignal(){
+  // check if the form that triggered the event is formImport2
+  
+    // handle the file upload for formImport2
+  
+  console.log("enrrrrr")
+  var formData1 = new FormData($('#formSignal')[0])
+  $.ajax({
+    type: 'POST',
+    url: '/importSignal',
+    data: formData1,
+    processData: false,
+    contentType: false,
+    success: function(data) {
+      for(let i = 0;i<data["length"];i++){
+        if (data['y'][i] == data['y_new'][i]){
+        }
+        else{
+          break;
+        }
+      }
+      importGraph(data['x'], data['y'], data['y_new'],data["length"]);
+
+  }
+})
+  }
+
+  var clear = document.getElementById("clear")
+  clear.addEventListener("click",clearGraph)
+
+function clearGraph(){
+  xInput = []
+  yInput = []
+  y_filtterd =[]
+  Plotly.newPlot(graphDiv5, plotData, layout);
+  Plotly.newPlot(graphDiv6, filtter_data, layout)
+  // clearInterval(interval)
+}
+
+
+function importGraph(x_point,y_point,y_new_point,length){
+    var arrayLength = 100
+    var yArray = []
+    var yNewArray =[]
+    var xArray = []
+    for(var i = 0; i < arrayLength; i++) {
+      var y = y_point[i]
+      var y_new = y_new_point[i]
+      var x = x_point[i]
+      yArray[i] = y
+      yNewArray[i] = y_new
+      xArray[i] = x
+    }
+
+  plotData = [{
+    x: xArray,
+    y: yArray,
+    type: "scatter",
+    mode: "lines"
+  }];
+  layout = {
+    title: "Signal",
+    xaxis: {title: "Time (s)",
+    dtick: 10
+            },
+    yaxis: {title: "Y (A)"},
+  };
+  Plotly.newPlot(graphDiv5, plotData, layout);
+
+  Plotly.newPlot(graphDiv6, [{
+      x:xArray,
+      y: yNewArray,
+      type: 'scatter',
+      mode: "lines",
+      line: { color: '#fd413c' },
+    }],layout);
+
+var counter = 1;
+
+var interval = setInterval(function() {
+  var y = y_point[100+counter]
+  yArray = yArray.concat(y)
+  yArray.splice(0, 1)
+  var y_new = y_new_point[100+counter]
+  yNewArray = yNewArray.concat(y_new)
+  yNewArray.splice(0, 1)
+  var x = x_point[100+counter]
+  xArray = xArray.concat(x)
+  xArray.splice(0, 1)
+  var data_update = {
+    x:[xArray],
+    y: [yArray]
+  };
+  var new_data_update = {
+    x:[xArray],
+    y: [yNewArray]
+  };
+  Plotly.update(graphDiv5, data_update)
+  Plotly.update(graphDiv6, new_data_update)
+  if(++counter === length) clearInterval(interval);
+}, 100); 
+    
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function readyFilter(no){
   let x, y ;

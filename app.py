@@ -9,6 +9,7 @@ import numpy as np
 from scipy import signal
 import csv
 import scipy
+import io
 
 app = Flask(__name__)
 
@@ -214,6 +215,23 @@ def applying_filter():
     filteredSignal = scipy.signal.lfilter(b,a,inputSignal)
     return jsonify(filteredSignal.real.tolist())
 
+@app.route('/importSignal' , methods=['POST'])
+def importSignal():
+    if request.method =="POST":
+        fileName = request.files['fileSignal']
+        if fileName:
+            # global filteredSignal
+            # value = request.files.get('imported-signal')
+            # print(value.filename)
+            file = fileName.read()
+            df = pd.read_csv(io.StringIO(file.decode('utf-8')))
+            # print(importedsig['x'])
+            # new_signal = applying_filter(df['y'])
+            b,a = scipy.signal.zpk2tf(zeros, poles, 1) 
+            # inputSignal = request.get_json()
+            new_signal = scipy.signal.lfilter(b,a,df['y'])
+            data = {'x':df['x'].tolist(),'y':df['y'].tolist(),'y_new':new_signal.real.tolist(),'length':len(df["y"])}
+    return jsonify(data)
 
 if __name__ == '__main__':
 	app.run(debug=True)

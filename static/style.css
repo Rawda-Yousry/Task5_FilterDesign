@@ -92,9 +92,9 @@ button[type=submit]:hover{
     background: #0d45a5;
 }
 
-input[type=file]{
+/* input[type=file]{
     display: none;
-}
+} */
 
 .label{
     background: #084cdf;
