@@ -71,10 +71,13 @@
                 <input type="number" id="y_value" name="y_value" step = 0.1>
               </div>
               <div class="submit-btn">
-                <button type="submit">Add</button>
+                <button type="submit">Show</button>
               </div>
             </div>
           </form>
+          <div class="submit-btn">
+            <button type="submit" onclick="applyFilter()">Apply</button>
+          </div>
           <div class="filter-graph">
             <div class="filter">
               <div id = "graphDiv3" class="chart1"></div>
@@ -87,24 +90,37 @@
         <div id="tab-2" class="tab-content" style="overflow-x: hidden;">
           <div class="scroll-area">
             <figure>
-              <img src="static\Filter img\150.30_Z_Notch.png" onclick="readyFilter(1);">  
-              <figcaption>Notch Filter</figcaption>
+              <img src="static\Catalog\-0.3.png" onclick="readyFilter(1);">  
             </figure>
 
             <figure>
-              <img src="static\Filter img\270.150-Z_HPF.png" onclick="readyFilter(2);">
-              <figcaption>HPF</figcaption>
+              <img src="static\Catalog\-0.7.png" onclick="readyFilter(2);">
             </figure>
 
             <figure>
-              <img src="static\Filter img\30.150_270.150_Z_BPF.png" onclick="readyFilter(3);">
-              <figcaption>BPF</figcaption>
+              <img src="static\Catalog\0.5.png" onclick="readyFilter(3);">
               </figure>
 
             <figure>
-              <img src="static\Filter img\30.150__LPF.png" onclick="readyFilter(4);">
-              <figcaption>LPF</figcaption>
+              <img src="static\Catalog\0.9.png" onclick="readyFilter(4);">
             </figure>
+
+            <figure>
+              <img src="static\Catalog\1j.png" onclick="readyFilter(5);">
+            </figure>
+
+            <figure>
+              <img src="static\Catalog\2i.png" onclick="readyFilter(6);">
+            </figure>
+
+            <figure>
+              <img src="static\Catalog\0.5+0.5j.png" onclick="readyFilter(7);">
+            </figure>
+
+            <figure>
+              <img src="static\Catalog\1+1j.png" onclick="readyFilter(8);">
+            </figure>
+
           </div>
 
           <div class="scroll-arrow left-arrow">

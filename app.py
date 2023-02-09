@@ -23,8 +23,10 @@ angles = []
 filteredSignal = []
 allPassCoeff = [0,0]
 angles_allPass = np.zeros(512)
+anglesallPass = np.zeros(512)
 w_allPass = []
 
+applyAllPassFlag = False
     
 def normalization(arr):
     for i in arr:
@@ -67,10 +69,11 @@ def allPassFilter():
 
     a =  x + y*1j
 
-    global w_allPass, angles_allPass
+    global w_allPass, anglesallPass, angles_allPass
     w_allPass, h_allPass = signal.freqz([-a,1], [1, -a])
     anglesallPass = np.unwrap(np.angle(h_allPass))
-    angles_allPass +=  anglesallPass
+    if applyAllPassFlag == True:
+        angles_allPass +=  anglesallPass
 
     filter_send()
     return ""
@@ -84,8 +87,10 @@ def index():
 def filter_send():
     filter()
 
-    global w, magnitude, angles, angles_allPass
-    angles = angles + angles_allPass
+    global w, magnitude, angles, angles_allPass, anglesallPass
+    if applyAllPassFlag == True:
+        global angles
+        angles = angles + angles_allPass
 
     if type(w) is not list:
         w = w.tolist()
@@ -102,8 +107,8 @@ def filter_send():
     else:
         pass
 
-    if type(angles_allPass) is not list:
-        angles_allPass = angles_allPass.tolist()
+    if type(anglesallPass) is not list:
+        anglesallPass = anglesallPass.tolist()
     else:
         pass
     
@@ -111,7 +116,7 @@ def filter_send():
     "magnitudeX": w,
     "magnitudeY": magnitude,
     "angles": angles,
-    "angles_allPass": angles_allPass,
+    "angles_allPass": anglesallPass,
     }
     return jsonify(params)
 
@@ -137,9 +142,11 @@ def getZeros():
 
 @app.route("/allPassCoeff", methods = ["POST"])
 def allPassCoeff():
-    global allPassCoeff
+    global allPassCoeff,applyAllPassFlag
     data = request.get_json() 
-    allPassCoeff = [float(data['x']), float(data['y'])]  
+    allPassCoeff = [float(data['x']), float(data['y'])] 
+    applyAllPassFlag = data['flag']
+     
     allPassFilter()
     # filter_send()
     return '  '
@@ -187,12 +194,13 @@ def importFilter():
     
 @app.route("/initiate",methods=["post"])
 def initiate():
-    global zeros,zerosArray,poles,polesArray, w, angles, angles_allPass
+    global zeros,zerosArray,poles,polesArray, w, angles, angles_allPass, anglesallPass
     zerosArray = []
     poles=[]
     zeros=[]
     polesArray=[]
     angles_allPass = np.zeros(512)
+    anglesallPass = np.zeros(512)
     angles =[]
     return " "
 

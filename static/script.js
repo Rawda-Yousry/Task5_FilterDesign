@@ -505,10 +505,18 @@ form.addEventListener("submit", function(event) {
   coeff = {
     x: x_value,
     y: y_value,
+    flag: false,
   };
   sendCoeff()
   draw()
 });
+
+function applyFilter(){
+  coeff.flag = true
+  console.log(coeff.flag)
+  sendCoeff()
+  draw()
+}
 
 function sendCoeff(){
   fetch(`${window.origin}/allPassCoeff`, {
@@ -607,4 +615,44 @@ function updateGraph(){
   
 }
 
+function readyFilter(no){
+  let x, y ;
+  if (no == 1){
+    x = -0.3
+    y = 0  }
+  
+  else if (no == 2){
+    x = -0.7
+    y = 0  }
+
+  else if (no == 3){
+    x = 0.5
+    y = 0  }
+
+  else if (no == 4){
+    x = 0.9
+    y = 0  }
+
+  else if (no == 5){
+    x = 0
+    y = 1  }
+
+  else if (no == 6){
+    x = 0
+    y = 2  }
+  else if (no == 7){
+    x = 0.5
+    y = 0.5  }
+
+  else {
+    x = 1
+    y = 1  }
+
+  coeff = {
+    x: x,
+    y: y,
+  };
+  sendCoeff()
+  redraw()
+}
 
