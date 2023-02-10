@@ -235,15 +235,16 @@ input[type=number]{
 }
 
 .filter-table{
-    text-align: center;
+    /* text-align: center; */
+    display: flex; 
+    justify-content: center;
 }
 
 table{
     overflow-y: auto;
     max-height: 150px;
     display:block;
-    text-align: left;
-    padding-left: 22rem;
+    text-align: center;
 }
 
 table::-webkit-scrollbar {
@@ -260,9 +261,6 @@ th, td{
 th{
     text-align: center;
 }
-/* td{
-    border:1px solid black;
-} */
 
 .table-btn{
     background:none;

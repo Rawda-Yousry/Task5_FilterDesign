@@ -75,20 +75,20 @@
                 <div class="form-cont">
                   <div>
                     <label for="x_value">x</label>
-                    <input type="number" id="x_value" name="x_value" step = 0.1>
+                    <input type="number" id="x_value" name="x_value" step = 0.1 value="0">
                   </div>
                   <div>
                     <label for="y_value">y</label>
-                    <input type="number" id="y_value" name="y_value" step = 0.1>
+                    <input type="number" id="y_value" name="y_value" step = 0.1 value="0">
                   </div>
-                  <button class="button" type="submit">Show</button>
+                  <!-- <button class="button" type="submit">Show</button> -->
                 </div>
               </form>
-              <button class="button" onclick="applyFilter()">Apply</button>
+              <button class="button" onclick="applyFilter()">Add</button>
             </div>
             <div class="col2">
+              <p>Filters</p>
               <div class="filter-table">
-                <p>Filters</p>
                 <table id="table">
                   <tr>
                     <td><p id="note">No filter added.</p></td>
@@ -112,7 +112,16 @@
               <div class="col1">
                 <div id = "graphDiv7" class="chart3"></div>
               </div>
-              <div class="col2"></div>
+              <div class="col2">
+                <p>Filters</p>
+                <div class="filter-table">
+                  <table id="table2">
+                    <tr>
+                      <td><p id="note2">No filter added.</p></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
             </div>
             <div class="menu-wrapper">
               <ul class="menu">

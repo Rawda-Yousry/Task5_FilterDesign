@@ -89,12 +89,16 @@ def allPassFilter():
 
 def deleteAllpassFilter():
     a = get_a(deletedAllpassCoeff)
+    print(a)
 
     global deleted_w_allPass, deleted_anglesallPass, angles_allPass
     deleted_w_allPass, h_allPass = signal.freqz([-a,1], [1, -a])
     deleted_anglesallPass = np.unwrap(np.angle(h_allPass))
+    print('b',angles_allPass[300])
+    print('bd',deleted_anglesallPass[300])
     if deleteFlag == True:
         angles_allPass -= deleted_anglesallPass
+    print('a',angles_allPass[300])
 
     filter_send()
     return ""
@@ -110,11 +114,10 @@ def filter_send():
 
     global w, magnitude, angles, angles_allPass, anglesallPass
     if applyAllPassFlag == True:
-        global angles
         angles = angles + angles_allPass
 
     if deleteFlag == True:
-        angles = angles - angles_allPass
+        angles = angles + angles_allPass
 
     if type(w) is not list:
         w = w.tolist()
@@ -185,7 +188,7 @@ def deletedAllpassCoeff():
     applyAllPassFlag = data['flag']
      
     deleteAllpassFilter()
-    print(deletedAllpassCoeff)
+    # print(deletedAllpassCoeff)
     # filter_send()
     return '  '
 

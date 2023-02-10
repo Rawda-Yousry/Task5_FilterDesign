@@ -30,7 +30,7 @@ window.onload = function () {
     processData: false,
     contentType: false,
     success: function() {
-      console.log("donee")
+      // console.log("donee")
       draw();
   }
 }
@@ -153,7 +153,7 @@ function drawZero(x, y) {
     context.beginPath();
     context.arc(x, y, 5, 0, 2 * Math.PI);
     context.fill();
-    console.log(x,y)
+    // console.log(x,y)
 }
 
 function drawPole(x, y) {
@@ -165,7 +165,7 @@ function drawPole(x, y) {
     context.moveTo(x + 5, y - 5);
     context.lineTo(x - 5, y + 5);
     context.stroke();
-    console.log(x,y)
+    // console.log(x,y)
 }
 
 function redraw() {
@@ -383,7 +383,7 @@ async function draw(){
 
   try {
     const data = await getData();
-    console.log(data.angles);
+    // console.log(data.angles);
     var graphDiv3 = document.getElementById('graphDiv3');
     var graphData3 = [{
       x: data.magnitudeX,
@@ -483,6 +483,8 @@ window.onclick = function(event) {
 }
 
 
+
+
 // Phase Correction Window
 
 const tabs = document.querySelectorAll('.tab');
@@ -527,26 +529,29 @@ tabs.forEach(tab => {
 
 const form = document.getElementById("allPassCoeff");
 var coeff;
-form.addEventListener("submit", function(event) {
-  event.preventDefault();
-  const x_value = document.getElementById("x_value").value;
-  const y_value = document.getElementById("y_value").value;
-  coeff = {
-    x: x_value,
-    y: y_value,
-    flag: false,
-    delete: false,
-  };
-  sendCoeff()
-  draw()
+form.addEventListener("keypress", function(event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    const x_value = document.getElementById("x_value").value;
+    const y_value = document.getElementById("y_value").value;
+    coeff = {
+      x: x_value,
+      y: y_value,
+      flag: false,
+      delete: false,
+    };
+    sendCoeff();
+    draw();
+  }
 });
 
 var deletedCoeff;
+var delCoeff;
 var deletedCoeffarr = [];
 var cont = 0;
 function applyFilter(){
   coeff.flag = true;
-  console.log(coeff.flag);
+  // console.log(coeff.flag);
   sendCoeff();
   draw();
 
@@ -565,7 +570,15 @@ function applyFilter(){
   row.setAttribute("id", cont);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
-  cell1.innerHTML = `${coeff.x} +${coeff.y}j`;
+  if(coeff.x == 0){
+    cell1.innerHTML = `${coeff.y}j`;
+  }
+  else if(coeff.y == 0){
+    cell1.innerHTML = `${coeff.x}`;
+  }
+  else{
+    cell1.innerHTML = `${coeff.x} +${coeff.y}j`;
+  }
   cell2.innerHTML = `<button class="table-btn" id="btn${cont}" onclick="deleteA(${cont})">Delete</button>`;
 }
 
@@ -573,27 +586,32 @@ function deleteA(rowid){
   for (var i = 1; i <= deletedCoeffarr.length; i++){
     if(i == rowid){
       delCoeff = deletedCoeffarr[i - 1];
-      console.log(delCoeff);
+      deletedCoeffarr.splice(i-1, 1);
       break;
     }
   }
-  fetch(`${window.origin}/deletedAllpassCoeff`, {
-    method: "POST",
-    credentials: "include",
-    body: JSON.stringify(delCoeff),
-    cache: "no-cache",
-    headers: new Headers({
-      "content-type": "application/json"
+  if(delCoeff != {}){
+    fetch(`${window.origin}/deletedAllpassCoeff`, {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(delCoeff),
+      cache: "no-cache",
+      headers: new Headers({
+        "content-type": "application/json"
+      })
     })
-  })
+  }
+  delCoeff = {};
   draw();
   deleteRow(rowid);
+
 }
 
 function deleteRow(rowid) {   
-  var row = document.getElementById(rowid);
-  row.parentNode.removeChild(row);
-  if(rowid == 1){
+  var row1 = document.getElementById(rowid);
+  row1.parentNode.removeChild(row1);
+  cont -= 1;
+  if(cont == 0){
     var note = document.getElementById('note');
     note.style.display = 'block';
   }
@@ -623,6 +641,118 @@ $(".right-arrow").click(function() {
     scrollLeft: "+=1400px"
   }, "fast");
 });
+
+
+var deletedCoeffR;
+var delCoeffR;
+var deletedCoeffarrR = [];
+var dcount = 0;
+function readyFilter(no){
+  console.log(no)
+  let x, y ;
+  if (no == 1){
+    x = -0.3
+    y = 0  }
+  
+  else if (no == 2){
+    x = -0.7
+    y = 0  }
+
+  else if (no == 3){
+    x = 0.5
+    y = 0  }
+
+  else if (no == 4){
+    x = 0.9
+    y = 0  }
+
+  else if (no == 5){
+    x = 0
+    y = 1  }
+
+  else if (no == 6){
+    x = 0
+    y = 2  }
+  else if (no == 7){
+    x = 0.5
+    y = 0.5  }
+
+  else {
+    x = 1
+    y = 1  }
+
+  coeff = {
+    x: x,
+    y: y,
+    flag: true,
+    delete: false,
+  };
+  sendCoeff();
+  draw();
+
+
+  var note2 = document.getElementById('note2');
+  note2.style.display = 'none';
+  dcount += 1;
+  deletedCoeffR = {
+    x: coeff.x,
+    y: coeff.y,
+    flag: false,
+    delete: true,
+  };
+  deletedCoeffarrR.push(deletedCoeffR);
+  var table2 = document.getElementById("table2");
+  var row2 = table2.insertRow(-1);
+  row2.setAttribute("id", `R${dcount}`);
+  var cell1 = row2.insertCell(0);
+  var cell2 = row2.insertCell(1);
+  if(coeff.x == 0){
+    cell1.innerHTML = `${coeff.y}j`;
+  }
+  else if(coeff.y == 0){
+    cell1.innerHTML = `${coeff.x}`;
+  }
+  else{
+    cell1.innerHTML = `${coeff.x} +${coeff.y}j`;
+  }
+  cell2.innerHTML = `<button class="table-btn" id="btn2${dcount}" onclick="deleteR(${dcount})">Delete</button>`;
+}
+
+function deleteR(id){
+  for (var i = 1; i <= deletedCoeffarrR.length; i++){
+    if(i == id ){
+      console.log('aaaaaaaa')
+      delCoeffR = deletedCoeffarrR[i-1];
+      deletedCoeffarrR.splice(i-1, 1);
+      break;
+    }
+  }
+  if(delCoeffR != {}){
+    fetch(`${window.origin}/deletedAllpassCoeff`, {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(delCoeffR),
+      cache: "no-cache",
+      headers: new Headers({
+        "content-type": "application/json"
+      })
+    })
+  }
+  delCoeffR = {};
+  draw();
+  deleteRowR(id);
+}
+
+function deleteRowR(id) {   
+  var row2 = document.getElementById(`R${id}`);
+  row2.parentNode.removeChild(row2);
+  dcount -= 1;
+  if(dcount == 0){
+    var note2 = document.getElementById('note2');
+    note2.style.display = 'block';
+  }
+}
+
 
 // Live signal
 var xInput = [];
@@ -672,7 +802,7 @@ function sendInput(yInput){
     contentType: "application/json; charset=utf-8",
     dataType: "json",
     success: function(data){
-      console.log(data);  // Logs the processed data to the console
+      // console.log(data);  // Logs the processed data to the console
       resolve(data);
     }
     
@@ -710,7 +840,7 @@ function importSignal(){
   
     // handle the file upload for formImport2
   
-  console.log("enrrrrr")
+  // console.log("enrrrrr")
   var formData1 = new FormData($('#formSignal')[0])
   $.ajax({
     type: 'POST',
@@ -839,53 +969,4 @@ function clearGraph(){
 
 
 
-
-
-
-
-
-
-
-
-function readyFilter(no){
-  let x, y ;
-  if (no == 1){
-    x = -0.3
-    y = 0  }
-  
-  else if (no == 2){
-    x = -0.7
-    y = 0  }
-
-  else if (no == 3){
-    x = 0.5
-    y = 0  }
-
-  else if (no == 4){
-    x = 0.9
-    y = 0  }
-
-  else if (no == 5){
-    x = 0
-    y = 1  }
-
-  else if (no == 6){
-    x = 0
-    y = 2  }
-  else if (no == 7){
-    x = 0.5
-    y = 0.5  }
-
-  else {
-    x = 1
-    y = 1  }
-
-  coeff = {
-    x: x,
-    y: y,
-    flag: true,
-  };
-  sendCoeff()
-  redraw()
-}
 
