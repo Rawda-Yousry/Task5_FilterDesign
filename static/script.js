@@ -258,6 +258,7 @@ function getData(){
           magnitudeY: array.magnitudeY,
           angles: array.angles,
           angles_allPass: array.angles_allPass,
+          phaseResponse: array.phaseResponse
         };
         sessionStorage.setItem('data', JSON.stringify(data));
         resolve(data);
@@ -280,7 +281,9 @@ function importFilter(){
     processData: false,
     contentType: false,
     success: function(data) {
-      draw();
+      zeros = []
+      poles =[]
+      
       if(data.zerosArray.length > 0){
       for (var i = 0; i < data.zerosArray.length; i++) {
         const x = (data.zerosArray[i][0])*120 + 150  ;
@@ -288,7 +291,7 @@ function importFilter(){
         // drawZero(x ,y , 5, 0, 2 * Math.PI);
         var newZero = {x: x, y: y};
         zeros.push(newZero);
-        drawZero(x, y);
+        // drawZero(x, y);
     }
   }
   if(data.polesArray.length> 0){
@@ -298,12 +301,12 @@ function importFilter(){
       // drawPole(x, y, 5, 0, 2 * Math.PI);
       var newPole = {x: x, y: y};
       poles.push(newPole);
-      drawPole(x, y);
+      // drawPole(x, y);
   }
 
   }
 
-
+  redraw()
     }
   });
 }
@@ -413,7 +416,7 @@ async function draw(){
     var graphDiv4 = document.getElementById('graphDiv4');
     var graphData4 = [{
       x: data.magnitudeX,
-      y: data.angles,
+      y: data.phaseResponse,
       type: 'scatter'
     }];
 
@@ -529,8 +532,8 @@ tabs.forEach(tab => {
 
 const form = document.getElementById("allPassCoeff");
 var coeff;
-form.addEventListener("keypress", function(event) {
-  if (event.key === "Enter") {
+form.addEventListener("submit", function(event) {
+  // if (event.key === "Enter") {
     event.preventDefault();
     const x_value = document.getElementById("x_value").value;
     const y_value = document.getElementById("y_value").value;
@@ -542,7 +545,7 @@ form.addEventListener("keypress", function(event) {
     };
     sendCoeff();
     draw();
-  }
+  // }
 });
 
 var deletedCoeff;
@@ -550,8 +553,16 @@ var delCoeff;
 var deletedCoeffarr = [];
 var cont = 0;
 function applyFilter(){
-  coeff.flag = true;
+  // coeff.flag = true;
   // console.log(coeff.flag);
+  const x_value = document.getElementById("x_value").value;
+  const y_value = document.getElementById("y_value").value;
+  coeff = {
+    x: x_value,
+    y: y_value,
+    flag: true,
+    delete: false,
+  };
   sendCoeff();
   draw();
 
@@ -565,6 +576,7 @@ function applyFilter(){
     delete: true,
   };
   deletedCoeffarr.push(deletedCoeff);
+  // console.log(deletedCoeff)
   var table = document.getElementById("table");
   var row = table.insertRow(-1);
   row.setAttribute("id", cont);
@@ -962,11 +974,4 @@ function clearGraph(){
   Plotly.update("graphDiv6", {x: [xInput], y: [y_filtterd]});
   // clearInterval(interval)
 }
-
-
-
-
-
-
-
 
