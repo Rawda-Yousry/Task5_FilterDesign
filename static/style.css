@@ -10,6 +10,7 @@ body {
 	margin: 0;
     padding: 2em 1em;
     overflow: hidden;
+    overflow-y: hidden;
 }
 
 .container{

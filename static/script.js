@@ -36,16 +36,15 @@ window.onload = function () {
 }
 )};
 
-
-
 canvas.addEventListener("click", function(event) {
   var x = event.clientX - canvas.offsetLeft;
   var y = event.clientY - canvas.offsetTop;
-  var zero = document.getElementById("zero");
-  var pole = document.getElementById("pole");
+  var zeroradio = document.getElementById("zero");
+  var poleradio = document.getElementById("pole");
+  var selectFlag = true;
   // console.log(x, y);
 
-  if (pole.checked) {
+  if (poleradio.checked || zeroradio.checked) {
     var pselected = false;
     for (var i = 0; i < poles.length; i++) {
       var pole = poles[i];
@@ -57,11 +56,31 @@ canvas.addEventListener("click", function(event) {
           selectedPole = pole;
         }
         pselected = true;
+        selectFlag = false;
         redraw();
         break;
       }
     }
-    if (!pselected) {
+    var zselected = false;
+    for (var i = 0; i < zeros.length; i++) {
+        var zero = zeros[i];
+        var distance = Math.sqrt(Math.pow(x - zero.x, 2) + Math.pow(y - zero.y, 2));
+        if (distance <= 5) {
+          if (selectedZero === zero){
+            selectedZero = null;
+          }else{
+            selectedZero = zero;
+          }
+          zselected = true;
+          selectFlag = false;
+          redraw();
+          break;
+        }
+    }
+  }
+    if (selectFlag) {
+      console.log(zeroradio.checked)
+      if(poleradio.checked){
         var newPole = {x: x, y: y};
         poles.push(newPole);
         drawPole(x, y);
@@ -69,35 +88,23 @@ canvas.addEventListener("click", function(event) {
         getData();
         draw();
     }
-    
-    } 
-    else if (zero.checked) {
-        var zselected = false;
-        for (var i = 0; i < zeros.length; i++) {
-            var zero = zeros[i];
-            var distance = Math.sqrt(Math.pow(x - zero.x, 2) + Math.pow(y - zero.y, 2));
-            if (distance <= 5) {
-              if (selectedZero === zero){
-                selectedZero = null;
-              }else{
-                selectedZero = zero;
-              }
-              zselected = true;
-              redraw();
-              break;
-            }
-        }
-        if (!zselected) {
-            var newZero = {x: x, y: y};
-            zeros.push(newZero);
-            drawZero(x, y);
-            send(poles, zeros);
-            getData();
-            draw();
-        }
+      if(zeroradio.checked){
+        var newZero = {x: x, y: y};
+        zeros.push(newZero);
+        drawZero(x, y);
+        send(poles, zeros);
+        getData();
+        draw();
+    }
     }
 
 });
+
+function deleteallShape(){
+  poles = [];
+  zeros = [];
+  redraw();
+}
 
 canvas.addEventListener("mousedown", function(event) {
     if (selectedPole !== null || selectedZero !== null) {
@@ -598,7 +605,7 @@ function deleteA(rowid){
   for (var i = 1; i <= deletedCoeffarr.length; i++){
     if(i == rowid){
       delCoeff = deletedCoeffarr[i - 1];
-      deletedCoeffarr.splice(i-1, 1);
+      // deletedCoeffarr.splice(i-1, 1);
       break;
     }
   }
@@ -685,6 +692,7 @@ function readyFilter(no){
   else if (no == 6){
     x = 0
     y = 2  }
+
   else if (no == 7){
     x = 0.5
     y = 0.5  }
@@ -735,7 +743,7 @@ function deleteR(id){
     if(i == id ){
       console.log('aaaaaaaa')
       delCoeffR = deletedCoeffarrR[i-1];
-      deletedCoeffarrR.splice(i-1, 1);
+      // deletedCoeffarrR.splice(i-1, 1);
       break;
     }
   }
@@ -792,12 +800,14 @@ var layout = {
     xaxis: {title: "Time (s)",
     dtick: 10
             },
-    yaxis: {title: "X Position"},
+    yaxis: {title: "X Position",
+    automargin: true,
+  },
 };
 var layout2 = {
   title: "Output Signal",
   xaxis: {title: "Time (s)",
-  dtick: 10
+  dtick: 10,
           },
   yaxis: {title: "X Position"},
 };
@@ -831,10 +841,10 @@ canvasGenerate.addEventListener("mousemove",async function(event) {
   if (xInput.length >= 100) {
     xInput.splice(0, 10);
     yInput.splice(0, 10);
-    y_filtterd.splice(0,10);
+    y_filtterd.splice(0,15);
   }
   xInput.push(elapsedTime);
-  yInput.push(event.clientX);
+  yInput.push(event.clientX/10);
   
   y_filtterd = await sendInput(yInput)
   

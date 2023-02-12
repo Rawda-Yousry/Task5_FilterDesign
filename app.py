@@ -74,11 +74,11 @@ def allPassFilterCalculate(coeff):
     a = get_a(coeff)
     w, h = signal.freqz([-a,1], [1, -a])    # Calculate the frequency reponse using the Implementation Equation form 
     angle = np.unwrap(np.angle(h))
-    return w, angle
+    return angle
 
 def allPassFilter():
-    global w_allPass, current_allPassAngle, angles_allPass
-    w_allPass, current_allPassAngle = allPassFilterCalculate(allPassCoeff)
+    global current_allPassAngle, angles_allPass
+    current_allPassAngle = allPassFilterCalculate(allPassCoeff)
     if applyAllPassFlag == True:
         angles_allPass +=  current_allPassAngle
 
@@ -112,13 +112,13 @@ def filter_send():
 
     phaseCorectionResponse += current_allPassAngle
 
-    if applyAllPassFlag == True:
+    if applyAllPassFlag == True or deleteFlag == True:
         angles = angles + angles_allPass
         phaseCorectionResponse = angles.copy()
-
-    if deleteFlag == True:
-        angles = angles + angles_allPass
-        phaseCorectionResponse = angles.copy()
+    
+    if len(zerosArray) == 0 and len(polesArray) == 0:
+        angles = np.zeros(512)
+        # phaseCorectionResponse = angles.copy()
  
     params = {
     "magnitudeX": w.tolist(),
